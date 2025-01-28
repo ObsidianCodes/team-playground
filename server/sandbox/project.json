@@ -1,0 +1,38 @@
+{
+  "name": "api-sandbox",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "server/sandbox/src",
+  "projectType": "application",
+  "tags": ["api"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "webpack-cli build",
+        "args": ["node-env=production"]
+      },
+      "configurations": {
+        "development": {
+          "args": ["node-env=development"]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "api-sandbox:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-sandbox:build:development"
+        },
+        "production": {
+          "buildTarget": "api-sandbox:build:production"
+        }
+      }
+    }
+  }
+}
