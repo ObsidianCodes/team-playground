@@ -1,0 +1,94 @@
+{
+  "name": "sandbox",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "obs",
+  "sourceRoot": "ui/sandbox/src",
+  "tags": ["ui"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/ui/sandbox",
+        "index": "ui/sandbox/src/index.html",
+        "browser": "ui/sandbox/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "ui/sandbox/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "ui/sandbox/public"
+          }
+        ],
+        "styles": ["ui/sandbox/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 4199,
+        "proxyConfig": "ui/sandbox/proxy.conf.json"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "sandbox:build:production"
+        },
+        "development": {
+          "buildTarget": "sandbox:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "sandbox:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/ui/sandbox"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "port": 4199,
+        "staticFilePath": "dist/ui/sandbox/browser",
+        "spa": true
+      }
+    }
+  }
+}
